@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset = "utf-8">
+  <title>ストップウォッチ</title>
+</head>
+
+<body>
+  <h1>ストップウォッチ</h1>
+  <div id="sec" style="font-size: 128px">0.00</div>
+  <input type="BUTTON" value="Start!" id="run">
+  <input type="BUTTON" value="Stop!" id="stop">
+  <input type="BUTTON" value="Reset!" id="reset">
+  
+  <SCRIPT>
+  (function () {
+    var startTime,
+        stopTime,
+        running = false,
+        timerId;
+
+    document.getElementById('run').onclick = function() {
+      run();
+    }
+    
+    document.getElementById('stop').onclick = function() {
+      stop();
+    }
+
+    document.getElementById('reset').onclick = function() {
+      reset();
+    }
+
+
+
+    function run() {
+
+      if ( running ) return; // 既に起動していた場合の多重起動を防ぐ
+
+      running = true;
+
+      if ( stopTime ) {
+        // startTime - stopTimeで停止した時の時間の-値が算出される
+        startTime = startTime - stopTime + (new Date()).getTime();         console.log( startTime );
+        console.log( stopTime );
+      }
+
+      if ( !stopTime ) {
+        startTime = (new Date()).getTime();
+      }
+
+      timer();
+    }
+
+    function timer() {
+      document.getElementById('sec').innerHTML = ((new Date().getTime() - startTime) / 1000).toFixed(2);
+      timerId = setTimeout(function() {
+        timer();
+      }, 100);
+    }
+
+    function stop() {
+      
+      if ( !running ) return false;
+
+      running = false;
+
+      clearTimeout( timerId );
+      stopTime = (new Date()).getTime();
+
+    }
+
+    function reset() {
+      if ( running ) {
+        running = false;
+        clearTimeout( timerId );
+      } else {
+        stopTime = undefined;
+      }
+      
+      startTime = undefined;
+      document.getElementById('sec').innerHTML = "0.00";
+    }
+  }) ();
+  </SCRIPT>
+</html>
+
+
